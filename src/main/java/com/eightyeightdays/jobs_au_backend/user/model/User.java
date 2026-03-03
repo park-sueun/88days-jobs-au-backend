@@ -3,6 +3,7 @@ package com.eightyeightdays.jobs_au_backend.user.model;
 import com.eightyeightdays.jobs_au_backend.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -41,5 +42,16 @@ public class User extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private UserRole role;
+
+    @Builder
+    private User(String email, String password, String firstName, String lastName, String phone, String profileImageUrl, UserRole role) {
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.profileImageUrl = profileImageUrl;
+        this.role = role;
+    }
 
 }
