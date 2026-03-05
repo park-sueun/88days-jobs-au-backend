@@ -8,7 +8,10 @@ import com.eightyeightdays.jobs_au_backend.auth.repository.RefreshTokenRepositor
 import com.eightyeightdays.jobs_au_backend.auth.model.CustomUserDetails;
 import com.eightyeightdays.jobs_au_backend.global.security.JwtTokenProvider;
 import com.eightyeightdays.jobs_au_backend.user.model.User;
+import com.eightyeightdays.jobs_au_backend.user.model.UserRole;
+import com.eightyeightdays.jobs_au_backend.user.model.WorkerProfile;
 import com.eightyeightdays.jobs_au_backend.user.repository.UserRepository;
+import com.eightyeightdays.jobs_au_backend.user.repository.WorkerProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,6 +29,7 @@ import java.time.OffsetDateTime;
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final WorkerProfileRepository workerProfileRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -55,6 +59,20 @@ public class AuthService {
                 .build();
 
         userRepository.save(user);
+
+        if (user.getRole() == UserRole.WORKER) {
+            WorkerProfile profile = WorkerProfile.of(user);
+            workerProfileRepository.save(profile);
+        }
+
+        if (user.getRole() == UserRole.EMPLOYER) {
+
+        }
+
+        if (user.getRole() == UserRole.ADMIN) {
+
+        }
+
     }
 
 
