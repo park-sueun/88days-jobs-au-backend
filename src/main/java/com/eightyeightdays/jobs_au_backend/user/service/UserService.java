@@ -59,7 +59,7 @@ public class UserService {
 
             List<EmployerCompanyProfileResponse> profiles = employerProfileRepository.findAllByUserId(user.getId())
                     .stream()
-                    .map(profile -> EmployerCompanyProfileResponse.from(profile))
+                    .map(EmployerCompanyProfileResponse::from)
                     .toList();
 
             return UserResponse.from(user, EmployerProfileResponse.from(profiles));
