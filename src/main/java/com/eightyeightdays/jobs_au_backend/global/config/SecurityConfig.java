@@ -1,12 +1,12 @@
 package com.eightyeightdays.jobs_au_backend.global.config;
 
-import com.eightyeightdays.jobs_au_backend.auth.model.CustomUserDetails;
 import com.eightyeightdays.jobs_au_backend.auth.service.CustomUserDetailsService;
 import com.eightyeightdays.jobs_au_backend.global.security.JwtAuthenticationFilter;
 import com.eightyeightdays.jobs_au_backend.global.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -33,7 +33,6 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // *** When login, use AuthenticationManager
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
@@ -43,23 +42,41 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
+                .cors(cors -> {}) // CORS 활성화
                 .csrf(csrf -> csrf.disable())
-                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                .sessionManagement(sm ->
+                        sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
                 .userDetailsService(userDetailsService)
+
                 .authorizeHttpRequests(auth -> auth
+
+                        // preflight 허용
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
                         .requestMatchers("/api/auth/**").permitAll()
+
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
+
                         .requestMatchers(
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui.html"
                         ).permitAll()
+
                         .requestMatchers("/api/test/admin").hasRole("ADMIN")
-                        .requestMatchers("/api/test/user").hasAnyRole("WORKER", "EMPLOYER", "ADMIN")
+
+                        .requestMatchers("/api/test/user")
+                        .hasAnyRole("WORKER", "EMPLOYER", "ADMIN")
+
                         .requestMatchers("/api/**").authenticated()
+
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+
+                .addFilterBefore(jwtAuthenticationFilter(),
+                        UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
