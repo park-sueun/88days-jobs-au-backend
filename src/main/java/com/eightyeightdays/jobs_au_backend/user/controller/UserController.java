@@ -31,4 +31,11 @@ public class UserController {
         return userService.getUser(id);
     }
 
+    @GetMapping("/me")
+    public UserResponse getMe(
+            @AuthenticationPrincipal CustomUserDetails user
+    ) {
+        return userService.getUser(user.getUserId());
+    }
+
 }
