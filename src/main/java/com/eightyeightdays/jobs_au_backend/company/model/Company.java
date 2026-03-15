@@ -1,6 +1,8 @@
 package com.eightyeightdays.jobs_au_backend.company.model;
 
 import com.eightyeightdays.jobs_au_backend.company.dto.CompanyPatchRequest;
+import com.eightyeightdays.jobs_au_backend.geocode.place.dto.Address;
+import com.eightyeightdays.jobs_au_backend.geocode.place.dto.Location;
 import com.eightyeightdays.jobs_au_backend.global.entity.BaseTimeEntity;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
@@ -136,5 +138,18 @@ public class Company extends BaseTimeEntity {
         if (request.status() != null) {
             this.status = request.status();
         }
+    }
+
+    public void updateLocation(Location location) {
+        this.latitude = location.lat();
+        this.longitude = location.lng();
+    }
+
+    public void updateAddress(Address address) {
+        this.unit = address.getUnit();
+        this.street = address.getStreet();
+        this.suburb = address.getSuburb();
+        this.state = State.valueOf(address.getState());
+        this.postcode = address.getPostcode();
     }
 }

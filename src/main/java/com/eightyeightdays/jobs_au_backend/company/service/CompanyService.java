@@ -5,6 +5,7 @@ import com.eightyeightdays.jobs_au_backend.company.dto.CompanyPatchRequest;
 import com.eightyeightdays.jobs_au_backend.company.dto.CompanyResponse;
 import com.eightyeightdays.jobs_au_backend.company.model.Company;
 import com.eightyeightdays.jobs_au_backend.company.repository.CompanyRepository;
+import com.eightyeightdays.jobs_au_backend.geocode.place.service.PlaceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,7 @@ import java.util.List;
 public class CompanyService {
 
     private final CompanyRepository companyRepository;
+    private final PlaceService placeService;
 
     @Transactional
     public void create(CompanyCreateRequest request) {
@@ -44,6 +46,12 @@ public class CompanyService {
                 .status(request.status())
 
                 .build();
+
+        placeService.findByCompany(company)
+                        .ifPresent(place -> {
+                                    company.updateLocation(place.geometry().location());
+                                    company.updateAddress(place.address());
+                                });
                 
         companyRepository.save(company);
     }
@@ -65,6 +73,7 @@ public class CompanyService {
         return CompanyResponse.from(company);
     }
 
+    @Transactional
     public CompanyResponse patch(Long id, CompanyPatchRequest request) {
 
         Company company = companyRepository.findById(id)
@@ -81,7 +90,5 @@ public class CompanyService {
                         .orElseThrow(() -> new IllegalStateException("Company not found"));
 
         companyRepository.delete(company);
-
-        companyRepository.deleteById(id);
     }
 }
