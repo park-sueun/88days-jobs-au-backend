@@ -16,27 +16,40 @@ public class Address {
     public static Address of(String formattedAddress) {
         Address dto = new Address();
 
-        String[] parts = formattedAddress.split(",");
+        String[] parts = formattedAddress.split(",", 2);
+
+        String streetPart = null;
+        String[] location;
 
         // street part
-        String streetPart = parts[0].trim();
-
-        if (streetPart.contains("/")) {
-            String[] unitSplit = streetPart.split("/");
-            dto.unit = unitSplit[0];
-            dto.street = unitSplit[1];
+        if (parts.length > 1) {
+            streetPart = parts[0].trim();
+            location = parts[1].trim().split("\\s+");
         } else {
-            dto.street = streetPart;
+            location = parts[0].trim().split("\\s+");
+        }
+
+        // street parsing
+        if (streetPart != null) {
+            if (streetPart.contains("/")) {
+                String[] unitSplit = streetPart.split("/");
+                dto.unit = unitSplit[0];
+                dto.street = unitSplit[1];
+            } else {
+                dto.street = streetPart;
+            }
         }
 
         // suburb + state + postcode
-        String[] location = parts[1].trim().split("\\s+");
+        if (location.length >= 3) {
+            dto.postcode = location[location.length - 1];
+            dto.state = location[location.length - 2];
 
-        dto.postcode = location[location.length - 1];
-        dto.state = location[location.length - 2];
-
-        // suburb는 나머지 전체
-        dto.suburb = String.join(" ", Arrays.copyOfRange(location, 0, location.length - 2));
+            dto.suburb = String.join(
+                    " ",
+                    Arrays.copyOfRange(location, 0, location.length - 2)
+            );
+        }
 
         return dto;
     }
