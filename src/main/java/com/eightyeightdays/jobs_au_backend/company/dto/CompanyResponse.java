@@ -19,8 +19,8 @@ public record CompanyResponse(
         Double latitude,
         Double longitude,
 
-        WorkType workType,
-        PayType payType,
+        Category category,
+        String season,
         String cropType,
 
         boolean isVisaExtensionEligible,
@@ -44,8 +44,8 @@ public record CompanyResponse(
                 company.getLatitude(),
                 company.getLongitude(),
 
-                company.getWorkType(),
-                company.getPayType(),
+                company.getCategory(),
+                company.getSeason(),
                 company.getCropType(),
 
                 company.getIsVisaExtensionEligible(),

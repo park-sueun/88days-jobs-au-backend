@@ -2,6 +2,7 @@ package com.eightyeightdays.jobs_au_backend.company.service;
 
 import com.eightyeightdays.jobs_au_backend.company.dto.CompanyCreateRequest;
 import com.eightyeightdays.jobs_au_backend.company.dto.CompanyPatchRequest;
+import com.eightyeightdays.jobs_au_backend.company.dto.CompanyPutRequest;
 import com.eightyeightdays.jobs_au_backend.company.dto.CompanyResponse;
 import com.eightyeightdays.jobs_au_backend.company.model.Company;
 import com.eightyeightdays.jobs_au_backend.company.repository.CompanyRepository;
@@ -38,8 +39,8 @@ public class CompanyService {
                 .latitude(request.latitude())
                 .longitude(request.longitude())
 
-                .workType(request.workType())
-                .payType(request.payType())
+                .category(request.category())
+                .season(request.season())
                 .cropType(request.cropType())
 
                 .isVisaExtensionEligible(request.isVisaExtensionEligible())
@@ -47,12 +48,12 @@ public class CompanyService {
 
                 .build();
 
-        placeService.findByCompany(company)
-                        .ifPresent(place -> {
-                                    company.updateLocation(place.geometry().location());
-                                    company.updateAddress(place.address());
-                                });
-                
+//        placeService.findByCompany(company)
+//                        .ifPresent(place -> {
+//                                    company.updateLocation(place.geometry().location());
+//                                    company.updateAddress(place.address());
+//                                });
+
         companyRepository.save(company);
     }
 
@@ -69,6 +70,17 @@ public class CompanyService {
 
         Company company = companyRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("Company not found"));
+
+        return CompanyResponse.from(company);
+    }
+
+    @Transactional
+    public CompanyResponse put(Long id, CompanyPutRequest request) {
+
+        Company company = companyRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("Company not found"));
+
+        company.update(request);
 
         return CompanyResponse.from(company);
     }

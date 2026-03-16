@@ -17,14 +17,6 @@ public class CompanyController {
 
     private final CompanyService companyService;
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody CompanyCreateRequest request) {
-
-        companyService.create(request);
-
-    }
-
     @GetMapping
     public List<CompanyResponse> getList() {
 
@@ -35,18 +27,6 @@ public class CompanyController {
     public CompanyResponse get(@PathVariable Long id) {
 
         return companyService.get(id);
-    }
-
-    @PatchMapping("/{id}")
-    public CompanyResponse patch(@PathVariable Long id, @RequestBody CompanyPatchRequest request) {
-
-        return companyService.patch(id, request);
-    }
-
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-
-        companyService.delete(id);
     }
 
 }

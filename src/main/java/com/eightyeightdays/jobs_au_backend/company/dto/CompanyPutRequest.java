@@ -4,7 +4,7 @@ import com.eightyeightdays.jobs_au_backend.company.model.Category;
 import com.eightyeightdays.jobs_au_backend.company.model.State;
 import com.eightyeightdays.jobs_au_backend.company.model.Status;
 
-public record CompanyCreateRequest(
+public record CompanyPutRequest(
         String name,
         String contactNumber,
         String email,

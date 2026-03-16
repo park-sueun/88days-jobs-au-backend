@@ -1,10 +1,10 @@
 package com.eightyeightdays.jobs_au_backend.company.model;
 
 import com.eightyeightdays.jobs_au_backend.company.dto.CompanyPatchRequest;
+import com.eightyeightdays.jobs_au_backend.company.dto.CompanyPutRequest;
 import com.eightyeightdays.jobs_au_backend.geocode.place.dto.Address;
 import com.eightyeightdays.jobs_au_backend.geocode.place.dto.Location;
 import com.eightyeightdays.jobs_au_backend.global.entity.BaseTimeEntity;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -36,35 +36,36 @@ public class Company extends BaseTimeEntity {
     private Double longitude;
 
     @Enumerated(EnumType.STRING)
-    private WorkType workType;
-
-    @Enumerated(EnumType.STRING)
-    private PayType payType;
-
+    private Category category;
+    private String season;
     private String cropType;
 
     private Boolean isVisaExtensionEligible;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private Status status = Status.ACTIVE;
 
     @Builder
-    private Company(String name, String contactNumber, String email, String website, String description, String unit, String street, String suburb, State state, String postcode, Double latitude, Double longitude, WorkType workType, PayType payType, String cropType, Boolean isVisaExtensionEligible, Status status) {
+    private Company(String name, String contactNumber, String email, String website, String description, String unit, String street, String suburb, State state, String postcode, Double latitude, Double longitude, Category category, String season, String cropType, Boolean isVisaExtensionEligible, Status status) {
         this.name = name;
         this.contactNumber = contactNumber;
         this.email = email;
         this.website = website;
         this.description = description;
+
         this.unit = unit;
         this.street = street;
         this.suburb = suburb;
         this.state = state;
         this.postcode = postcode;
+
         this.latitude = latitude;
         this.longitude = longitude;
-        this.workType = workType;
-        this.payType = payType;
+
+        this.category = category;
+        this.season = season;
         this.cropType = cropType;
+
         this.isVisaExtensionEligible = isVisaExtensionEligible;
         this.status = status;
     }
@@ -119,12 +120,12 @@ public class Company extends BaseTimeEntity {
             this.longitude = request.longitude();
         }
 
-        if (request.workType() != null) {
-            this.workType = request.workType();
+        if (request.category() != null) {
+            this.category = request.category();
         }
 
-        if (request.payType() != null) {
-            this.payType = request.payType();
+        if (request.season() != null) {
+            this.season = request.season();
         }
 
         if (request.cropType() != null) {
@@ -151,5 +152,30 @@ public class Company extends BaseTimeEntity {
         this.suburb = address.getSuburb();
         this.state = State.valueOf(address.getState());
         this.postcode = address.getPostcode();
+    }
+
+    public void update(CompanyPutRequest request) {
+
+        this.name = request.name();
+        this.contactNumber = request.contactNumber();
+        this.email = request.email();
+        this.website = request.website();
+        this.description = request.description();
+
+        this.unit = request.unit();
+        this.street = request.street();
+        this.suburb = request.suburb();
+        this.state = request.state();
+        this.postcode = request.postcode();
+
+        this.latitude = request.latitude();
+        this.longitude = request.longitude();
+
+        this.category = request.category();
+        this.season = request.season();
+        this.cropType = request.cropType();
+
+        this.isVisaExtensionEligible = request.isVisaExtensionEligible();
+        this.status = request.status();
     }
 }

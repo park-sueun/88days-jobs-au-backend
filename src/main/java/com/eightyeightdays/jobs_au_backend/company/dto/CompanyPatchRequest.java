@@ -1,10 +1,8 @@
 package com.eightyeightdays.jobs_au_backend.company.dto;
 
-import com.eightyeightdays.jobs_au_backend.company.model.PayType;
+import com.eightyeightdays.jobs_au_backend.company.model.Category;
 import com.eightyeightdays.jobs_au_backend.company.model.State;
 import com.eightyeightdays.jobs_au_backend.company.model.Status;
-import com.eightyeightdays.jobs_au_backend.company.model.WorkType;
-import lombok.Getter;
 
 public record CompanyPatchRequest(
         String name,
@@ -21,8 +19,8 @@ public record CompanyPatchRequest(
         Double latitude,
         Double longitude,
 
-        WorkType workType,
-        PayType payType,
+        Category category,
+        String season,
         String cropType,
 
         Boolean isVisaExtensionEligible,
