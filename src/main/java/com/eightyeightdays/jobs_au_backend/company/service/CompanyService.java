@@ -8,6 +8,8 @@ import com.eightyeightdays.jobs_au_backend.company.model.Company;
 import com.eightyeightdays.jobs_au_backend.company.repository.CompanyRepository;
 import com.eightyeightdays.jobs_au_backend.geocode.place.service.PlaceService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,6 +66,11 @@ public class CompanyService {
         return companies.stream()
                 .map(company -> CompanyResponse.from(company))
                 .toList();
+    }
+
+    public Page<CompanyResponse> getCompanies(Pageable pageable) {
+        return companyRepository.findAll(pageable)
+                .map(CompanyResponse::from);
     }
 
     public CompanyResponse get(Long id) {

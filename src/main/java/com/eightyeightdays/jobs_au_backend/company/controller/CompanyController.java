@@ -5,6 +5,8 @@ import com.eightyeightdays.jobs_au_backend.company.dto.CompanyPatchRequest;
 import com.eightyeightdays.jobs_au_backend.company.dto.CompanyResponse;
 import com.eightyeightdays.jobs_au_backend.company.service.CompanyService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,9 +20,9 @@ public class CompanyController {
     private final CompanyService companyService;
 
     @GetMapping
-    public List<CompanyResponse> getList() {
+    public Page<CompanyResponse> getCompanies(Pageable pageable) {
 
-        return companyService.findAll();
+        return companyService.getCompanies(pageable);
     }
 
     @GetMapping("/{id}")
