@@ -1,6 +1,6 @@
 package com.eightyeightdays.jobs_au_backend.controller;
 
-import com.eightyeightdays.jobs_au_backend.auth.model.CustomUserDetails;
+import com.eightyeightdays.jobs_au_backend.infra.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;

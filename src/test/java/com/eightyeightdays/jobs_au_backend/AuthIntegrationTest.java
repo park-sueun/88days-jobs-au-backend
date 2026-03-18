@@ -1,10 +1,9 @@
 package com.eightyeightdays.jobs_au_backend;
 
-import com.eightyeightdays.jobs_au_backend.auth.dto.LoginRequest;
-import com.eightyeightdays.jobs_au_backend.auth.dto.SignupRequest;
-import com.eightyeightdays.jobs_au_backend.user.model.User;
-import com.eightyeightdays.jobs_au_backend.user.model.UserRole;
-import com.eightyeightdays.jobs_au_backend.user.repository.UserRepository;
+import com.eightyeightdays.jobs_au_backend.domain.auth.dto.LoginRequest;
+import com.eightyeightdays.jobs_au_backend.domain.auth.dto.SignupRequest;
+import com.eightyeightdays.jobs_au_backend.domain.user.entity.UserRole;
+import com.eightyeightdays.jobs_au_backend.domain.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;

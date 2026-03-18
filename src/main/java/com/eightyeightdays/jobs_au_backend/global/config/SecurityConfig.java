@@ -1,8 +1,8 @@
 package com.eightyeightdays.jobs_au_backend.global.config;
 
-import com.eightyeightdays.jobs_au_backend.auth.service.CustomUserDetailsService;
-import com.eightyeightdays.jobs_au_backend.global.security.JwtAuthenticationFilter;
-import com.eightyeightdays.jobs_au_backend.global.security.JwtTokenProvider;
+import com.eightyeightdays.jobs_au_backend.domain.auth.service.CustomUserDetailsService;
+import com.eightyeightdays.jobs_au_backend.infra.security.JwtAuthenticationFilter;
+import com.eightyeightdays.jobs_au_backend.infra.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
