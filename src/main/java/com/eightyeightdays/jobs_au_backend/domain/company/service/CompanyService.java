@@ -1,17 +1,22 @@
 package com.eightyeightdays.jobs_au_backend.domain.company.service;
 
+import com.eightyeightdays.jobs_au_backend.domain.company.dto.CompanySearchRequest;
 import com.eightyeightdays.jobs_au_backend.domain.company.dto.CreateCompanyRequest;
 import com.eightyeightdays.jobs_au_backend.domain.company.dto.UpdateCompanyRequest;
 import com.eightyeightdays.jobs_au_backend.domain.company.dto.CompanyResponse;
 import com.eightyeightdays.jobs_au_backend.domain.company.entity.Company;
 import com.eightyeightdays.jobs_au_backend.domain.company.repository.CompanyRepository;
+import com.eightyeightdays.jobs_au_backend.domain.company.repository.CompanySpecification;
 import com.eightyeightdays.jobs_au_backend.domain.geocode.service.PlaceService;
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -67,9 +72,31 @@ public class CompanyService {
                 .toList();
     }
 
-    public Page<CompanyResponse> getCompanies(Pageable pageable) {
-        return companyRepository.findAll(pageable)
-                .map(CompanyResponse::from);
+    public List<CompanyResponse> getCompanies(CompanySearchRequest req, Pageable pageable) {
+
+        Specification<Company> spec = (root, query, cb) -> cb.conjunction();
+
+        if (req.category() != null) {
+            spec = spec.and(CompanySpecification.hasCategory(req.category()));
+        }
+
+        if (req.state() != null) {
+            spec = spec.and(CompanySpecification.hasState(req.state()));
+        }
+
+        if (req.season() != null) {
+            spec = spec.and(CompanySpecification.hasSeason(req.season()));
+        }
+
+        if (req.cropType() != null) {
+            spec = spec.and(CompanySpecification.hasCropType(req.cropType()));
+        }
+
+        Page<Company> companies = companyRepository.findAll(spec, pageable);
+
+        return companies.stream()
+                .map(company -> CompanyResponse.from(company))
+                .toList();
     }
 
     public CompanyResponse get(Long id) {
