@@ -9,9 +9,7 @@ import com.eightyeightdays.jobs_au_backend.infra.security.CustomUserDetails;
 import com.eightyeightdays.jobs_au_backend.infra.security.JwtTokenProvider;
 import com.eightyeightdays.jobs_au_backend.domain.user.entity.User;
 import com.eightyeightdays.jobs_au_backend.domain.user.entity.UserRole;
-import com.eightyeightdays.jobs_au_backend.domain.user.entity.WorkerProfile;
 import com.eightyeightdays.jobs_au_backend.domain.user.repository.UserRepository;
-import com.eightyeightdays.jobs_au_backend.domain.user.repository.WorkerProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,7 +27,6 @@ import java.time.OffsetDateTime;
 public class AuthService {
 
     private final UserRepository userRepository;
-    private final WorkerProfileRepository workerProfileRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -61,8 +58,7 @@ public class AuthService {
         userRepository.save(user);
 
         if (user.getRole() == UserRole.WORKER) {
-            WorkerProfile profile = WorkerProfile.of(user);
-            workerProfileRepository.save(profile);
+
         }
 
         if (user.getRole() == UserRole.EMPLOYER) {
