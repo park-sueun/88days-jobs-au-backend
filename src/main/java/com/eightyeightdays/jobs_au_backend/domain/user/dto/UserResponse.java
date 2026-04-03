@@ -1,6 +1,5 @@
 package com.eightyeightdays.jobs_au_backend.domain.user.dto;
 
-import com.eightyeightdays.jobs_au_backend.domain.user.dto.profile.ProfileResponse;
 import com.eightyeightdays.jobs_au_backend.domain.user.entity.User;
 import com.eightyeightdays.jobs_au_backend.domain.user.entity.UserRole;
 
@@ -11,10 +10,9 @@ public record UserResponse(
         String lastName,
         String phone,
         String profileImageUrl,
-        UserRole role,
-        ProfileResponse profile
+        UserRole role
 ) {
-    public static UserResponse from(User user, ProfileResponse profile) {
+    public static UserResponse from(User user) {
 
         return new UserResponse(
                 user.getId(),
@@ -23,8 +21,7 @@ public record UserResponse(
                 user.getLastName(),
                 user.getPhone(),
                 user.getProfileImageUrl(),
-                user.getRole(),
-                profile
+                user.getRole()
         );
 
     }
