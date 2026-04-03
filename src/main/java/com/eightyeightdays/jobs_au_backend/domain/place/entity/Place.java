@@ -20,7 +20,7 @@ public class Place extends BaseTimeEntity {
     private String website;
     private String description;
 
-    @OneToMany(mappedBy = "place")
+    @OneToMany(mappedBy = "place", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Contact> contacts = new ArrayList<>();
 
     private String state;
@@ -88,6 +88,11 @@ public class Place extends BaseTimeEntity {
         this.isVisaExtensionEligible = request.isVisaExtensionEligible();
         this.hasAccommodation = request.hasAccommodation();
         this.status = request.status();
+    }
+
+    public void updateContacts(List<Contact> newContacts) {
+        this.contacts.clear();
+        this.contacts.addAll(newContacts);
     }
 
     public void patch(com.eightyeightdays.jobs_au_backend.domain.place.dto.PlaceRequest request) {

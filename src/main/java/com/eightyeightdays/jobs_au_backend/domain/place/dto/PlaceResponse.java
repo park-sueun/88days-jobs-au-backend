@@ -4,12 +4,16 @@ import com.eightyeightdays.jobs_au_backend.domain.place.entity.Category;
 import com.eightyeightdays.jobs_au_backend.domain.place.entity.Place;
 import com.eightyeightdays.jobs_au_backend.domain.place.entity.Status;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public record PlaceResponse(
         Long id,
 
         String name,
         String website,
         String description,
+        List<ContactResponse> contacts,
 
         String state,
         String region,
@@ -35,6 +39,9 @@ public record PlaceResponse(
                 place.getName(),
                 place.getWebsite(),
                 place.getDescription(),
+                place.getContacts().stream()
+                        .map(ContactResponse::from)
+                        .toList(),
 
                 place.getState(),
                 place.getRegion(),
