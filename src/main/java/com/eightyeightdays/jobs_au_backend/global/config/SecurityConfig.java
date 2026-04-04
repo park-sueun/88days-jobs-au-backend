@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @RequiredArgsConstructor
@@ -22,6 +23,7 @@ public class SecurityConfig {
 
     private final JwtTokenProvider tokenProvider;
     private final CustomUserDetailsService userDetailsService;
+    private final CorsConfigurationSource corsConfigurationSource;
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
@@ -42,7 +44,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-                .cors(cors -> {}) // CORS 활성화
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .csrf(csrf -> csrf.disable())
 
                 .sessionManagement(sm ->
@@ -59,6 +61,8 @@ public class SecurityConfig {
 
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
+                        .requestMatchers("/api/places/**").permitAll()
+
                         .requestMatchers(
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
@@ -69,8 +73,6 @@ public class SecurityConfig {
 
                         .requestMatchers("/api/test/user")
                         .hasAnyRole("WORKER", "EMPLOYER", "ADMIN")
-
-                        .requestMatchers("/api/**").authenticated()
 
                         .anyRequest().authenticated()
                 )
