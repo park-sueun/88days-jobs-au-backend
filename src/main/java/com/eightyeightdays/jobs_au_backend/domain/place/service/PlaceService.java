@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.eightyeightdays.jobs_au_backend.domain.place.dto.ContactRequest;
+
 import java.util.List;
 
 @Service
@@ -44,11 +46,7 @@ public class PlaceService {
         placeRepository.save(place);
 
         if (request.contacts() != null) {
-            place.updateContacts(
-                    request.contacts().stream()
-                            .map(c -> Contact.of(c, place))
-                            .toList()
-            );
+            place.updateContacts(toContacts(request.contacts(), place));
         }
 
         return PlaceResponse.from(place);
@@ -80,9 +78,7 @@ public class PlaceService {
 
         place.update(request);
         place.updateContacts(
-                request.contacts() != null
-                        ? request.contacts().stream().map(c -> Contact.of(c, place)).toList()
-                        : List.of()
+                request.contacts() != null ? toContacts(request.contacts(), place) : List.of()
         );
 
         return PlaceResponse.from(place);
@@ -95,12 +91,21 @@ public class PlaceService {
 
         place.patch(request);
         if (request.contacts() != null) {
-            place.updateContacts(
-                    request.contacts().stream().map(c -> Contact.of(c, place)).toList()
-            );
+            place.updateContacts(toContacts(request.contacts(), place));
         }
 
         return PlaceResponse.from(place);
+    }
+
+    private boolean hasValue(String s) {
+        return s != null && !s.isBlank();
+    }
+
+    private List<Contact> toContacts(List<ContactRequest> requests, Place place) {
+        return requests.stream()
+                .filter(c -> hasValue(c.name()) || hasValue(c.phone()) || hasValue(c.email()))
+                .map(c -> Contact.of(c, place))
+                .toList();
     }
 
     @Transactional
