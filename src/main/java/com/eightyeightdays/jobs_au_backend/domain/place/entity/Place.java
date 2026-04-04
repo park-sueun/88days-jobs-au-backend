@@ -45,7 +45,6 @@ public class Place extends BaseTimeEntity {
     @lombok.Builder
     private Place(
             String name, String website, String description,
-            List<Contact> contacts,
             String state, String region, String postcode, String address,
             Double latitude, Double longitude,
             Category category, String season, String cropType, String payRate,
@@ -55,7 +54,6 @@ public class Place extends BaseTimeEntity {
         this.name = name;
         this.website = website;
         this.description = description;
-        this.contacts = contacts;
         this.state = state;
         this.region = region;
         this.postcode = postcode;

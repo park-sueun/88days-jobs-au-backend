@@ -5,6 +5,7 @@ import com.eightyeightdays.jobs_au_backend.domain.place.dto.PlaceResponse;
 import com.eightyeightdays.jobs_au_backend.domain.place.entity.Contact;
 import com.eightyeightdays.jobs_au_backend.domain.place.entity.Place;
 import com.eightyeightdays.jobs_au_backend.domain.place.repository.PlaceRepository;
+import com.eightyeightdays.jobs_au_backend.domain.place.repository.PlaceSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -51,6 +52,13 @@ public class PlaceService {
         }
 
         return PlaceResponse.from(place);
+    }
+
+    public List<PlaceResponse> findWithinBounds(Double north, Double south, Double east, Double west) {
+        return placeRepository.findAll(PlaceSpecification.withinBounds(north, south, east, west))
+                .stream()
+                .map(PlaceResponse::from)
+                .toList();
     }
 
     public List<PlaceResponse> getAll() {

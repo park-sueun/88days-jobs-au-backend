@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.List;
 
 @RestController
@@ -23,8 +25,22 @@ public class PlaceController {
     }
 
     @GetMapping
-    public List<PlaceResponse> getAll() {
-        return placeService.getAll();
+    public List<PlaceResponse> getAll(
+            @RequestParam(required = false) Double north,
+            @RequestParam(required = false) Double south,
+            @RequestParam(required = false) Double east,
+            @RequestParam(required = false) Double west
+    ) {
+
+        if (north == null && south == null && east == null && west == null) {
+            return placeService.getAll();
+        }
+        if (north == null || south == null || east == null || west == null) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Provide all of north, south, east, west, or omit all for full list");
+        }
+        return placeService.findWithinBounds(north, south, east, west);
     }
 
     @GetMapping("/{id}")
