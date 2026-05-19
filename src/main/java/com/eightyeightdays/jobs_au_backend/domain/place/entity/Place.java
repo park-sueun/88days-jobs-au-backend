@@ -10,6 +10,10 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(indexes = {
+        @Index(name = "idx_place_lat_lng", columnList = "latitude, longitude"),
+        @Index(name = "idx_place_status", columnList = "status")
+})
 public class Place extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

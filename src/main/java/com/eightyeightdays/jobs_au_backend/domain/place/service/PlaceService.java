@@ -1,18 +1,20 @@
 package com.eightyeightdays.jobs_au_backend.domain.place.service;
 
+import com.eightyeightdays.jobs_au_backend.domain.place.dto.ContactRequest;
 import com.eightyeightdays.jobs_au_backend.domain.place.dto.PlaceRequest;
 import com.eightyeightdays.jobs_au_backend.domain.place.dto.PlaceResponse;
+import com.eightyeightdays.jobs_au_backend.domain.place.dto.PlaceSummaryResponse;
+import com.eightyeightdays.jobs_au_backend.domain.place.dto.PlacesResponse;
 import com.eightyeightdays.jobs_au_backend.domain.place.entity.Contact;
 import com.eightyeightdays.jobs_au_backend.domain.place.entity.Place;
 import com.eightyeightdays.jobs_au_backend.domain.place.repository.PlaceRepository;
-import com.eightyeightdays.jobs_au_backend.domain.place.repository.PlaceSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-
-import com.eightyeightdays.jobs_au_backend.domain.place.dto.ContactRequest;
 
 import java.util.List;
 
@@ -52,21 +54,28 @@ public class PlaceService {
         return PlaceResponse.from(place);
     }
 
-    public List<PlaceResponse> findWithinBounds(Double north, Double south, Double east, Double west) {
-        return placeRepository.findAll(PlaceSpecification.withinBounds(north, south, east, west))
+    // bounds 내 장소 조회 — JOIN FETCH로 N+1 해결, 경량 DTO 반환
+    public List<PlaceSummaryResponse> findWithinBounds(Double north, Double south, Double east, Double west) {
+        double latMin = Math.min(north, south);
+        double latMax = Math.max(north, south);
+        double lngMin = Math.min(east, west);
+        double lngMax = Math.max(east, west);
+
+        return placeRepository.findWithinBoundsWithContacts(latMin, latMax, lngMin, lngMax)
                 .stream()
-                .map(PlaceResponse::from)
+                .map(PlaceSummaryResponse::from)
                 .toList();
     }
 
-    public List<PlaceResponse> getAll() {
-        return placeRepository.findAll().stream()
-                .map(PlaceResponse::from)
-                .toList();
+    // 페이지네이션 목록 조회
+    public Page<PlaceSummaryResponse> getAll(Pageable pageable) {
+        return placeRepository.findAllActive(pageable)
+                .map(PlaceSummaryResponse::from);
     }
 
+    // 단건 상세 조회 — contacts JOIN FETCH로 N+1 해결
     public PlaceResponse get(Long id) {
-        Place place = placeRepository.findById(id)
+        Place place = placeRepository.findByIdWithContacts(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Place not found"));
         return PlaceResponse.from(place);
     }
