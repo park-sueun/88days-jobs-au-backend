@@ -16,6 +16,7 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(List.of(
                 "http://localhost:3000",
+                "https://88days-jobs-au.vercel.app/",
                 "https://script.google.com",
                 "https://script.googleusercontent.com",
                 "*.ngrok-free.app"
